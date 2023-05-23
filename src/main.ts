@@ -12,6 +12,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  app.enableCors();
   await app.listen(3000);
   console.log(`Disponível na porta: ${await app.getUrl()}`);
 }

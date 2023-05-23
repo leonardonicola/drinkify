@@ -9,7 +9,7 @@ import { validate } from 'class-validator';
 
 @Injectable()
 export class LoginValidationMiddleware implements NestMiddleware {
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _res: Response, next: NextFunction) {
     const body = req.body;
 
     const loginRequestBody = new LoginRequestBody();

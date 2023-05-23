@@ -1,17 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UnauthorizedError } from './errors/unauthorized.error';
-import { User } from '@prisma/client';
-import { UserService } from '../user/user.service';
 import { UserPayload } from './models/user-payload';
 import { UserToken } from './models/user-token';
+import { User } from '../../core/domain/entities/user.entity';
+import { UserRepository } from '../../core/domain/repositories/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UserService,
+    private readonly userService: UserRepository,
   ) {}
 
   async login(user: User): Promise<UserToken> {
@@ -40,8 +39,6 @@ export class AuthService {
       }
     }
 
-    throw new UnauthorizedError(
-      'Email address or password provided is incorrect.',
-    );
+    throw new UnauthorizedException();
   }
 }

@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { DrinkService } from './drink.service';
 import { Drink } from '@prisma/client';
-import { CreateDrinkDto } from './models/dto/create-drink.dto';
-import { UpdateDrinkDto } from './models/dto/update-drink.dto';
+import { CreateDrinkDto } from '../../shared/dtos/drink/create-drink.dto';
+import { UpdateDrinkDto } from '../../shared/dtos/drink/update-drink.dto';
 import { IsPublic } from '../auth/decorators/is-public.decorator';
 
 @Controller('drink')

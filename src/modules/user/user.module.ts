@@ -1,20 +1,33 @@
 import { Module } from '@nestjs/common';
+import { PrismaService } from '../../infra/prisma/repositories/prisma.service';
+import { UserController } from '../../presentations/user.controller';
+import { PrismaUserRepository } from '../..//infra/prisma/repositories/user.repository';
+import { CreateUserUseCase } from '../../usecases/user/create-user.usecase';
+import { UpdateUserUseCase } from '../../usecases/user/update-user.usecase';
+import { DeleteUserUseCase } from '../../usecases/user/delete-user.usecase';
+import { GetAllUsersUseCase } from '../../usecases/user/get-all-usecase';
+import { GetByUniqueUseCase } from '../../usecases/user/get-by-unique.usecase';
+import { UserRepository } from '../../core/domain/repositories/user.repository';
 import { APP_GUARD } from '@nestjs/core';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   controllers: [UserController],
   providers: [
     PrismaService,
-    UserService,
+    {
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
+    },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    CreateUserUseCase,
+    UpdateUserUseCase,
+    DeleteUserUseCase,
+    GetAllUsersUseCase,
+    GetByUniqueUseCase,
   ],
-  exports: [UserService],
 })
 export class UserModule {}

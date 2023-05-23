@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
-import { CommentService } from './comment.service';
-import { Comment as CommentModel } from '@prisma/client';
-import { CreateCommentDto } from './models/dto/create-comment.dto';
+import { CreateCommentDto } from '../../shared/dtos/comment/create-comment.dto';
 import { IsPublic } from '../auth/decorators/is-public.decorator';
+import { CommentService } from './comment.service';
 
 @Controller('comment')
 export class CommentController {
@@ -10,12 +9,12 @@ export class CommentController {
 
   @IsPublic()
   @Get()
-  getAllComments(): Promise<CommentModel[] | null> {
+  getAllComments() {
     return this.commentService.getAllComments({ orderBy: { id: 'asc' } });
   }
 
   @Post()
-  postComment(@Body() commentData: CreateCommentDto): Promise<CommentModel> {
+  postComment(@Body() commentData: CreateCommentDto) {
     const { text, userId, drinkId } = commentData;
     return this.commentService.createComment({
       text,
@@ -25,7 +24,7 @@ export class CommentController {
   }
 
   @Delete(':id')
-  removeComment(@Param('id') id: string): Promise<CommentModel> {
+  removeComment(@Param('id') id: string) {
     return this.commentService.removeComment({ id });
   }
 }
