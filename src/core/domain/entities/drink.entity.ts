@@ -7,5 +7,5 @@ export interface Drink extends Entity {
   ingredients: string[];
   instructions: string[];
   isAlcoholic: boolean;
-  comments: Comment[];
+  comments?: Comment[];
 }

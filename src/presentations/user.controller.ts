@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../shared/dtos/user/create-user.dto';
 import { UpdateUserDto } from '../shared/dtos/user/update-user.dto';
-import { IsPublic } from '../modules/auth/decorators/is-public.decorator';
+import { IsPublic } from '../infra/modules/auth/decorators/is-public.decorator';
 import { CreateUserUseCase } from 'src/usecases/user/create-user.usecase';
 import { GetAllUsersUseCase } from 'src/usecases/user/get-all-usecase';
 import { UpdateUserUseCase } from 'src/usecases/user/update-user.usecase';

@@ -31,12 +31,15 @@ export class PrismaUserRepository implements UserRepository {
     }
   }
 
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers() {
     return this.prisma.user.findMany({ orderBy: { id: 'asc' } });
   }
 
-  async getUserById(id: string): Promise<User> {
-    return this.prisma.user.findUnique({ where: { id } });
+  async getUserById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { comments: true },
+    });
   }
 
   async getUserByUnique(userWhereUniqueInput: {
@@ -46,7 +49,7 @@ export class PrismaUserRepository implements UserRepository {
     return this.prisma.user.findUnique({ where: userWhereUniqueInput });
   }
 
-  async updateUserInfos(id: string, updateUser: User): Promise<User> {
+  async updateUserInfos(id: string, updateUser: User) {
     return this.prisma.user.update({
       where: { id },
       data: updateUser as Prisma.UserUpdateInput,

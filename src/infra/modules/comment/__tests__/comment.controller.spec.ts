@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CommentController } from '../comment.controller';
+import { CommentController } from '../../../presentations/comment.controller';
 import { CommentService } from '../comment.service';
 import { PrismaService } from '../../../infra/prisma/repositories/prisma.service';
 
