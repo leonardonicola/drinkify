@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Comment } from 'src/core/domain/entities/comment.entity';
-import { CommentRepository } from 'src/core/domain/repositories/comment.repository';
+import { Comment } from '../../core/domain/entities/comment.entity';
+import { CommentRepository } from '../../core/domain/repositories/comment.repository';
 
 @Injectable()
 export class GetCommentsUseCase {

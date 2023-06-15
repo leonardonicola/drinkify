@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CreateCommentDto } from '../shared/dtos/comment/create-comment.dto';
 import { IsPublic } from '../infra/modules/auth/decorators/is-public.decorator';
-import { CreateCommentUseCase } from 'src/usecases/comment/create-comment.usecase';
-import { RemoveCommentUseCase } from 'src/usecases/comment/remove-comment.usecase';
-import { GetCommentsUseCase } from 'src/usecases/comment/get-comments.usecase';
+import { CreateCommentUseCase } from '../usecases/comment/create-comment.usecase';
+import { RemoveCommentUseCase } from '../usecases/comment/remove-comment.usecase';
+import { GetCommentsUseCase } from '../usecases/comment/get-comments.usecase';
 
 @Controller('comment')
 export class CommentController {

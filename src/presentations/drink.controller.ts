@@ -10,11 +10,11 @@ import {
 import { CreateDrinkDto } from '../shared/dtos/drink/create-drink.dto';
 import { UpdateDrinkDto } from '../shared/dtos/drink/update-drink.dto';
 import { IsPublic } from '../infra/modules/auth/decorators/is-public.decorator';
-import { CreateDrinkUseCase } from 'src/usecases/drink/create-drink.usecase';
-import { UpdateDrinkUseCase } from 'src/usecases/drink/update-drink.usecase';
-import { GetDrinkByIdUseCase } from 'src/usecases/drink/get-by-id.usecase';
-import { GetAllDrinksUseCase } from 'src/usecases/drink/get-all.usecase';
-import { DeleteDrinkUseCase } from 'src/usecases/drink/delete-drink.usecase';
+import { CreateDrinkUseCase } from '../usecases/drink/create-drink.usecase';
+import { UpdateDrinkUseCase } from '../usecases/drink/update-drink.usecase';
+import { GetDrinkByIdUseCase } from '../usecases/drink/get-by-id.usecase';
+import { GetAllDrinksUseCase } from '../usecases/drink/get-all.usecase';
+import { DeleteDrinkUseCase } from '../usecases/drink/delete-drink.usecase';
 
 @Controller('drink')
 export class DrinkController {
