@@ -6,8 +6,8 @@ services:
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_USER: mitz
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: drinkify
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./data:/var/lib/postgresql/data
