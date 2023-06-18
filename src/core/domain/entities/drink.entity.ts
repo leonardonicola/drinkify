@@ -8,4 +8,5 @@ export interface Drink extends Entity {
   instructions: string[];
   isAlcoholic: boolean;
   comments?: Comment[];
+  imageUrl?: string;
 }

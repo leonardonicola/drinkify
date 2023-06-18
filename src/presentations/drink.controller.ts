@@ -6,6 +6,10 @@ import {
   Put,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
+  FileTypeValidator,
+  ParseFilePipe,
 } from '@nestjs/common';
 import { CreateDrinkDto } from '../shared/dtos/drink/create-drink.dto';
 import { UpdateDrinkDto } from '../shared/dtos/drink/update-drink.dto';
@@ -15,6 +19,8 @@ import { UpdateDrinkUseCase } from '../usecases/drink/update-drink.usecase';
 import { GetDrinkByIdUseCase } from '../usecases/drink/get-by-id.usecase';
 import { GetAllDrinksUseCase } from '../usecases/drink/get-all.usecase';
 import { DeleteDrinkUseCase } from '../usecases/drink/delete-drink.usecase';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadDrinkPhotoUseCase } from '../usecases/drink/upload-photo.usecase';
 
 @Controller('drink')
 export class DrinkController {
@@ -24,11 +30,26 @@ export class DrinkController {
     private readonly getDrinkByIdUseCase: GetDrinkByIdUseCase,
     private readonly getAllDrinksUseCase: GetAllDrinksUseCase,
     private readonly deleteDrinkUseCase: DeleteDrinkUseCase,
+    private readonly uploadDrinkPhotoUseCase: UploadDrinkPhotoUseCase,
   ) {}
 
   @Post()
-  createDrinkRecipe(@Body() createDrinkDto: CreateDrinkDto) {
-    return this.createDrinkUseCase.execute(createDrinkDto);
+  createDrinkRecipe(@Body() data: CreateDrinkDto) {
+    return this.createDrinkUseCase.execute(data);
+  }
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Put(':id/image')
+  uploadDrinkPhoto(
+    @Param('id') drinkId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: 'png' })],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.uploadDrinkPhotoUseCase.execute(drinkId, file);
   }
 
   @IsPublic()

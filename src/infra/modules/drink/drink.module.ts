@@ -10,6 +10,8 @@ import { UpdateDrinkUseCase } from 'src/usecases/drink/update-drink.usecase';
 import { GetAllDrinksUseCase } from 'src/usecases/drink/get-all.usecase';
 import { GetDrinkByIdUseCase } from 'src/usecases/drink/get-by-id.usecase';
 import { DeleteDrinkUseCase } from 'src/usecases/drink/delete-drink.usecase';
+import { FileUploadService } from 'src/infra/aws/bucket.repository';
+import { UploadDrinkPhotoUseCase } from 'src/usecases/drink/upload-photo.usecase';
 
 @Module({
   controllers: [DrinkController],
@@ -23,6 +25,8 @@ import { DeleteDrinkUseCase } from 'src/usecases/drink/delete-drink.usecase';
       provide: DrinkRepository,
       useClass: PrismaDrinkRepository,
     },
+    FileUploadService,
+    UploadDrinkPhotoUseCase,
     CreateDrinkUseCase,
     UpdateDrinkUseCase,
     GetAllDrinksUseCase,
