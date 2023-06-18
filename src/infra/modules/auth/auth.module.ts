@@ -15,7 +15,7 @@ import { PrismaUserRepository } from 'src/infra/prisma/repositories/user.reposit
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: 30 },
+      signOptions: { expiresIn: 3600 },
     }),
   ],
   controllers: [AuthController],
