@@ -18,16 +18,21 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "husky install && prisma generate --schema=./src/infra/prisma/schema.prisma"
+    "prepare": "husky install && prisma generate"
+  },
+  "prisma": {
+    "schema": "./src/infra/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "^4.13.0",
+    "aws-sdk": "^2.1399.0",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
@@ -51,6 +56,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/jest": "29.5.0",
+    "@types/multer": "^1.4.7",
     "@types/node": "18.15.11",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
