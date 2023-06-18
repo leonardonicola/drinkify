@@ -25,6 +25,7 @@ model Drink {
   ingredients  String[]
   instructions String[]
   isAlcoholic  Boolean
+  imageUrl     String?
   comments     Comment[]
 }
 
