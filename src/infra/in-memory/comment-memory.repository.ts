@@ -24,6 +24,9 @@ export class InMemoryCommentRepository implements CommentRepository {
   }
 
   async removeComment(id: string): Promise<Comment> {
+    if (!id) {
+      throw new Error('Id must be provided');
+    }
     const index = this.comments.findIndex((comment) => comment.id === id);
     if (index === -1) {
       throw new Error('Comment not found');
