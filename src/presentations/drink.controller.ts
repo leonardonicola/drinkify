@@ -10,6 +10,7 @@ import {
   UploadedFile,
   Req,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { CreateDrinkDto } from '../shared/dtos/drink/create-drink.dto';
 import { UpdateDrinkDto } from '../shared/dtos/drink/update-drink.dto';
@@ -64,8 +65,19 @@ export class DrinkController {
 
   @IsPublic()
   @Get()
-  getAllDrinks() {
-    return this.getAllDrinksUseCase.execute();
+  getAllDrinks(
+    @Query({
+      transform({ alcoholic }) {
+        if (alcoholic === '') return true;
+
+        if (!alcoholic) return undefined;
+
+        return alcoholic === 'true';
+      },
+    })
+    alcoholic?: boolean,
+  ) {
+    return this.getAllDrinksUseCase.execute(alcoholic);
   }
 
   @IsPublic()

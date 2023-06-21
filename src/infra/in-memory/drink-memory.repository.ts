@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GetAlcoholicsReturnType } from 'src/@types';
 import { Drink } from 'src/core/domain/entities/drink.entity';
 import { DrinkRepository } from 'src/core/domain/repositories/drink.repository';
 import { CreateDrinkDto } from 'src/shared/dtos/drink/create-drink.dto';
@@ -40,6 +41,10 @@ export class InMemoryDrinkRepository implements DrinkRepository {
 
   async getAllDrinks(): Promise<Drink[]> {
     return this.drinks;
+  }
+
+  async getAlcoholics(): Promise<GetAlcoholicsReturnType> {
+    return this.drinks.filter((drink) => drink.isAlcoholic);
   }
 
   async getDrinkById(id: string): Promise<Drink> {

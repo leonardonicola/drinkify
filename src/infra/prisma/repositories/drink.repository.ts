@@ -27,8 +27,9 @@ export class PrismaDrinkRepository implements DrinkRepository {
     return fileUrl;
   }
 
-  async getAllDrinks() {
+  async getAllDrinks(isAlcoholic: boolean) {
     return this.prisma.drink.findMany({
+      where: { isAlcoholic },
       orderBy: { id: 'asc' },
       select: {
         id: true,
