@@ -22,7 +22,6 @@ export class FileUploadService {
         Bucket: bucket,
         Body: file,
         Key: name,
-        ContentType: 'image/png',
       })
       .promise();
     return uploadResult.Location;
