@@ -34,8 +34,8 @@ describe('CommentController', () => {
       module.get<RemoveCommentUseCase>(RemoveCommentUseCase);
   });
 
-  describe('createComment', () => {
-    it('should create a new comment', async () => {
+  describe('CREATE', () => {
+    it('SUCESS: should create a new comment', async () => {
       // Arrange
       const commentData = {
         text: 'Fetuuuuce',
@@ -59,8 +59,8 @@ describe('CommentController', () => {
     });
   });
 
-  describe('getComments', () => {
-    it('should return an array of comments', async () => {
+  describe('GET', () => {
+    it('SUCESS: should return an array of comments', async () => {
       // Arrange
       const comments = [
         { id: 'asd-123asd', text: 'Comment 1' },
@@ -78,10 +78,39 @@ describe('CommentController', () => {
       expect(result).toEqual(comments);
       expect(getCommentsSpy).toHaveBeenCalled();
     });
+
+    it('SUCESS: should return an empty array if no comments are found', async () => {
+      // Arrange
+      const comments = [];
+
+      const getCommentsSpy = jest
+        .spyOn(getCommentsUseCase, 'execute')
+        .mockResolvedValueOnce(comments);
+
+      // Act
+      const result = await controller.getAllComments();
+
+      // Assert
+      expect(result).toEqual(comments);
+      expect(getCommentsSpy).toHaveBeenCalled();
+    });
+
+    it('ERROR: should throw an error if no comments are found', async () => {
+      const getCommentsSpy = jest
+        .spyOn(getCommentsUseCase, 'execute')
+        .mockRejectedValueOnce(new Error('No comments found'));
+
+      // Act
+      const result = controller.getAllComments();
+
+      // Assert
+      await expect(result).rejects.toThrowError('No comments found');
+      expect(getCommentsSpy).toHaveBeenCalled();
+    });
   });
 
-  describe('removeComment', () => {
-    it('should remove a comment', async () => {
+  describe('REMOVE', () => {
+    it('SUCESS: should remove a comment', async () => {
       // Arrange
       const commentId = 'asjdajs-123asdasd';
 
@@ -100,6 +129,38 @@ describe('CommentController', () => {
         id: commentId,
         text: 'Removed comment text ',
       });
+      expect(removeCommentSpy).toHaveBeenCalledWith(commentId);
+    });
+
+    it('ERROR: should throw an error if comment does not exist', async () => {
+      // Arrange
+      const commentId = 'asjdajs-123asdasd';
+
+      const removeCommentSpy = jest
+        .spyOn(removeCommentUseCase, 'execute')
+        .mockRejectedValueOnce(new Error('Comment not found'));
+
+      // Act
+      const result = controller.removeComment(commentId);
+
+      // Assert
+      await expect(result).rejects.toThrowError('Comment not found');
+      expect(removeCommentSpy).toHaveBeenCalledWith(commentId);
+    });
+
+    it('ERROR: should throw an error if comment id is not provided', async () => {
+      // Arrange
+      const commentId = undefined;
+
+      const removeCommentSpy = jest
+        .spyOn(removeCommentUseCase, 'execute')
+        .mockRejectedValueOnce(new Error('Comment not found'));
+
+      // Act
+      const result = controller.removeComment(commentId);
+
+      // Assert
+      await expect(result).rejects.toThrowError('Comment not found');
       expect(removeCommentSpy).toHaveBeenCalledWith(commentId);
     });
   });
