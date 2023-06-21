@@ -8,9 +8,6 @@ import { InMemoryCommentRepository } from '../../infra/in-memory/comment-memory.
 
 describe('CommentController', () => {
   let controller: CommentController;
-  let createCommentUseCase: CreateCommentUseCase;
-  let getCommentsUseCase: GetCommentsUseCase;
-  let removeCommentUseCase: RemoveCommentUseCase;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,11 +24,10 @@ describe('CommentController', () => {
     }).compile();
 
     controller = module.get<CommentController>(CommentController);
-    createCommentUseCase =
-      module.get<CreateCommentUseCase>(CreateCommentUseCase);
-    getCommentsUseCase = module.get<GetCommentsUseCase>(GetCommentsUseCase);
-    removeCommentUseCase =
-      module.get<RemoveCommentUseCase>(RemoveCommentUseCase);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('CREATE', () => {
@@ -43,125 +39,72 @@ describe('CommentController', () => {
         userId: 'KASD01023=1230asd9',
       };
 
-      const createCommentSpy = jest
-        .spyOn(createCommentUseCase, 'execute')
-        .mockResolvedValueOnce({
-          id: 'kasdkasdo=1230asd',
-          text: 'Fetuuuuce',
-        });
-
       // Act
       const result = await controller.postComment(commentData);
 
       // Assert
-      expect(result).toEqual({ id: 'kasdkasdo=1230asd', text: 'Fetuuuuce' });
-      expect(createCommentSpy).toHaveBeenCalledWith(commentData);
+      expect(result).toEqual({ id: '1', ...commentData });
     });
   });
 
   describe('GET', () => {
     it('SUCESS: should return an array of comments', async () => {
-      // Arrange
-      const comments = [
-        { id: 'asd-123asd', text: 'Comment 1' },
-        { id: 'asdjq-124919asd', text: 'Comment 2' },
-      ];
+      const commentData = {
+        text: 'Fetuuuuce',
+        drinkId: 'asidiqwd',
+        userId: 'KASD01023=1230asd9',
+      };
 
-      const getCommentsSpy = jest
-        .spyOn(getCommentsUseCase, 'execute')
-        .mockResolvedValueOnce(comments);
+      await controller.postComment(commentData);
 
-      // Act
       const result = await controller.getAllComments();
 
-      // Assert
-      expect(result).toEqual(comments);
-      expect(getCommentsSpy).toHaveBeenCalled();
+      expect(result).toEqual([{ ...commentData, id: '1' }]);
     });
 
     it('SUCESS: should return an empty array if no comments are found', async () => {
-      // Arrange
-      const comments = [];
-
-      const getCommentsSpy = jest
-        .spyOn(getCommentsUseCase, 'execute')
-        .mockResolvedValueOnce(comments);
-
       // Act
       const result = await controller.getAllComments();
 
       // Assert
-      expect(result).toEqual(comments);
-      expect(getCommentsSpy).toHaveBeenCalled();
-    });
-
-    it('ERROR: should throw an error if no comments are found', async () => {
-      const getCommentsSpy = jest
-        .spyOn(getCommentsUseCase, 'execute')
-        .mockRejectedValueOnce(new Error('No comments found'));
-
-      // Act
-      const result = controller.getAllComments();
-
-      // Assert
-      await expect(result).rejects.toThrowError('No comments found');
-      expect(getCommentsSpy).toHaveBeenCalled();
+      expect(result).toEqual([]);
     });
   });
 
   describe('REMOVE', () => {
     it('SUCESS: should remove a comment', async () => {
-      // Arrange
-      const commentId = 'asjdajs-123asdasd';
-
-      const removeCommentSpy = jest
-        .spyOn(removeCommentUseCase, 'execute')
-        .mockResolvedValueOnce({
-          id: commentId,
-          text: 'Removed comment text ',
-        });
-
-      // Act
-      const result = await controller.removeComment(commentId);
-
-      // Assert
-      expect(result).toEqual({
-        id: commentId,
+      const comment = {
         text: 'Removed comment text ',
-      });
-      expect(removeCommentSpy).toHaveBeenCalledWith(commentId);
-    });
+        drinkId: 'asidiqwd',
+        userId: 'KASD01023=1230asd9',
+      };
 
-    it('ERROR: should throw an error if comment does not exist', async () => {
-      // Arrange
-      const commentId = 'asjdajs-123asdasd';
-
-      const removeCommentSpy = jest
-        .spyOn(removeCommentUseCase, 'execute')
-        .mockRejectedValueOnce(new Error('Comment not found'));
+      await controller.postComment(comment);
 
       // Act
-      const result = controller.removeComment(commentId);
+      const result = await controller.removeComment('1');
 
       // Assert
-      await expect(result).rejects.toThrowError('Comment not found');
-      expect(removeCommentSpy).toHaveBeenCalledWith(commentId);
+      expect(result).toEqual({ id: '1', ...comment });
     });
 
-    it('ERROR: should throw an error if comment id is not provided', async () => {
+    it('ERROR: should not remove comment - Inexistent comment', () => {
+      // Act
+      const result = controller.removeComment('1');
+
+      // Assert
+      expect(result).rejects.toThrowError('Comment not found');
+    });
+
+    it('ERROR: should not remove comment - Missing ID', async () => {
       // Arrange
       const commentId = undefined;
 
-      const removeCommentSpy = jest
-        .spyOn(removeCommentUseCase, 'execute')
-        .mockRejectedValueOnce(new Error('Comment not found'));
-
       // Act
       const result = controller.removeComment(commentId);
 
       // Assert
-      await expect(result).rejects.toThrowError('Comment not found');
-      expect(removeCommentSpy).toHaveBeenCalledWith(commentId);
+      await expect(result).rejects.toThrowError('Id must be provided');
     });
   });
 });
