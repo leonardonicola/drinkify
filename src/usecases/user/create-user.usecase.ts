@@ -7,7 +7,7 @@ import { User } from '../../core/domain/entities/user.entity';
 export class CreateUserUseCase {
   constructor(private readonly userRepo: UserRepository) {}
 
-  async execute(user: CreateUserDto): Promise<User> {
+  async execute(user: CreateUserDto): Promise<Omit<User, 'password'>> {
     return await this.userRepo.createUser(user);
   }
 }

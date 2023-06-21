@@ -6,7 +6,7 @@ import { User } from '../../core/domain/entities/user.entity';
 export class GetAllUsersUseCase {
   constructor(private readonly userRepo: UserRepository) {}
 
-  async execute(): Promise<User[]> {
+  async execute(): Promise<Array<Omit<User, 'password'>>> {
     return await this.userRepo.getAllUsers();
   }
 }
