@@ -8,8 +8,8 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
-  FileTypeValidator,
-  ParseFilePipe,
+  Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateDrinkDto } from '../shared/dtos/drink/create-drink.dto';
 import { UpdateDrinkDto } from '../shared/dtos/drink/update-drink.dto';
@@ -38,17 +38,27 @@ export class DrinkController {
     return this.createDrinkUseCase.execute(data);
   }
 
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+          req.fileValidationError = true;
+          callback(null, false);
+        }
+        callback(null, true);
+      },
+    }),
+  )
   @Put(':id/image')
   uploadDrinkPhoto(
     @Param('id') drinkId: string,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [new FileTypeValidator({ fileType: 'png' })],
-      }),
-    )
+    @UploadedFile()
     file: Express.Multer.File,
+    @Req() req: any,
   ) {
+    if (req.fileValidationError) {
+      throw new BadRequestException('Unsupported file type');
+    }
     return this.uploadDrinkPhotoUseCase.execute(drinkId, file);
   }
 
