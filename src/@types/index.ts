@@ -5,3 +5,7 @@ export type GetAlcoholicsReturnType = Array<
 >;
 
 export type GetAllReturn = Array<Omit<Drink, 'instructions'>>;
+
+export type GetDrinksByNameReturn = GetAllReturn;
+
+export type GetByNameAndAlcoholicReturn = GetAlcoholicsReturnType;
