@@ -8,9 +8,9 @@ import { UpdateUserDto } from 'src/shared/dtos/user/update-user.dto';
 export class InMemoryUserRepository implements UserRepository {
   private users: User[] = [];
 
-  async getAllUsers(): Promise<Array<Omit<User, 'password'>>> {
+  async getAllUsers(): Promise<User[]> {
     const users = this.users.map((user) => {
-      delete user.password;
+      user.password = undefined;
       return user;
     });
 
@@ -38,7 +38,7 @@ export class InMemoryUserRepository implements UserRepository {
     return this.users[index];
   }
 
-  async createUser(user: CreateUserDto): Promise<Omit<User, 'password'>> {
+  async createUser(user: CreateUserDto): Promise<User> {
     if (this.users.find((u) => u.email === user.email)) {
       throw new Error('Email already in use');
     }
@@ -60,8 +60,7 @@ export class InMemoryUserRepository implements UserRepository {
       ...user,
     };
     this.users.push(newUser);
-    delete newUser.password;
-    return newUser;
+    return { ...newUser, password: undefined };
   }
 
   async deleteUser(id: string): Promise<User | undefined> {
@@ -90,6 +89,6 @@ export class InMemoryUserRepository implements UserRepository {
 
     const updatedUser = { ...this.users[userIndex], ...updatedInfo };
     this.users[userIndex] = updatedUser;
-    return updatedUser;
+    return { ...updatedUser, password: undefined };
   }
 }
