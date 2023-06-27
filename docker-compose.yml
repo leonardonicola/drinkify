@@ -5,9 +5,36 @@ services:
     restart: always
     ports:
       - '5432:5432'
+    container_name: drinkify-db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./data:/var/lib/postgresql/data
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: nginx:alpine
+    container_name: drinkify-server
+    ports:
+      - '80:80'
+    depends_on:
+      - nestjs-api
+    restart: always
+
+  nestjs-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nestjs-api
+    container_name: drinkify-api
+    env_file:
+      - .env
+    ports:
+      - '81:3000'
+    depends_on:
+      - postgres
+    restart: always
