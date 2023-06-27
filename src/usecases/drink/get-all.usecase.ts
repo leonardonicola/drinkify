@@ -6,7 +6,7 @@ import { GetAllReturn } from 'src/@types';
 export class GetAllDrinksUseCase {
   constructor(private readonly drinkRepo: DrinkRepository) {}
 
-  async execute(isAlcoholic?: boolean): Promise<GetAllReturn> {
-    return await this.drinkRepo.getAllDrinks(isAlcoholic);
+  async execute(): Promise<GetAllReturn> {
+    return await this.drinkRepo.getAllDrinks();
   }
 }
