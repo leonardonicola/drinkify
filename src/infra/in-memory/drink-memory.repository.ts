@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GetAlcoholicsReturnType } from 'src/@types';
+import { GetAlcoholicsReturnType, GetDrinksByNameReturn } from 'src/@types';
 import { Drink } from 'src/core/domain/entities/drink.entity';
 import { DrinkRepository } from 'src/core/domain/repositories/drink.repository';
 import { CreateDrinkDto } from 'src/shared/dtos/drink/create-drink.dto';
@@ -43,13 +43,26 @@ export class InMemoryDrinkRepository implements DrinkRepository {
     return this.drinks;
   }
 
-  async getAlcoholics(): Promise<GetAlcoholicsReturnType> {
+  async getAlcoholicDrinks(): Promise<GetAlcoholicsReturnType> {
     return this.drinks.filter((drink) => drink.isAlcoholic);
+  }
+
+  async getDrinksByName(name: string): Promise<GetDrinksByNameReturn> {
+    return this.drinks.filter((drink) => drink.name.includes(name));
+  }
+
+  async getByNameAndAlcoholic(
+    isAlcoholic: boolean,
+    name: string,
+  ): Promise<GetAlcoholicsReturnType> {
+    return this.drinks.filter(
+      (drink) => drink.isAlcoholic === isAlcoholic && drink.name.includes(name),
+    );
   }
 
   async getDrinkById(id: string): Promise<Drink> {
     const index = this.drinks.findIndex((comment) => comment.id === id);
-    if (!!id) {
+    if (id.length === 0) {
       throw new Error('Id must be provided');
     }
 

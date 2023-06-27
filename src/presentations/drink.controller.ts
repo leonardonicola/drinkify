@@ -22,6 +22,9 @@ import { GetAllDrinksUseCase } from '../usecases/drink/get-all.usecase';
 import { DeleteDrinkUseCase } from '../usecases/drink/delete-drink.usecase';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadDrinkPhotoUseCase } from '../usecases/drink/upload-photo.usecase';
+import { GetDrinkByNameUseCase } from '../usecases/drink/get-drink-by-name.usecase';
+import { GetAlcoholicDrinksUseCase } from '../usecases/drink/get-alcoholic-drinks.usecase';
+import { GetByNameAndAlcoholicUseCase } from '../usecases/drink/get-by-name-and-alcoholic.usecase';
 
 @Controller('drink')
 export class DrinkController {
@@ -32,6 +35,9 @@ export class DrinkController {
     private readonly getAllDrinksUseCase: GetAllDrinksUseCase,
     private readonly deleteDrinkUseCase: DeleteDrinkUseCase,
     private readonly uploadDrinkPhotoUseCase: UploadDrinkPhotoUseCase,
+    private readonly getDrinkByNameUseCase: GetDrinkByNameUseCase,
+    private readonly getAlcoholicDrinksUseCase: GetAlcoholicDrinksUseCase,
+    private readonly getByNameAndAlcoholicUseCase: GetByNameAndAlcoholicUseCase,
   ) {}
 
   @Post()
@@ -76,8 +82,22 @@ export class DrinkController {
       },
     })
     alcoholic?: boolean,
+    @Query('name')
+    name?: string,
   ) {
-    return this.getAllDrinksUseCase.execute(alcoholic);
+    if (alcoholic !== undefined && name !== undefined && name.length > 0) {
+      return this.getByNameAndAlcoholicUseCase.execute(alcoholic, name);
+    }
+
+    if (name !== undefined && name.length > 0) {
+      return this.getDrinkByNameUseCase.execute(name);
+    }
+
+    if (alcoholic !== undefined) {
+      return this.getAlcoholicDrinksUseCase.execute(alcoholic);
+    }
+
+    return this.getAllDrinksUseCase.execute();
   }
 
   @IsPublic()

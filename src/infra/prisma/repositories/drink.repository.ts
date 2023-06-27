@@ -4,6 +4,7 @@ import { Drink } from 'src/core/domain/entities/drink.entity';
 import { PrismaService } from './prisma.service';
 import { DrinkRepository } from 'src/core/domain/repositories/drink.repository';
 import { FileUploadService } from 'src/infra/aws/bucket.repository';
+import { GetAlcoholicsReturnType } from 'src/@types';
 
 @Injectable()
 export class PrismaDrinkRepository implements DrinkRepository {
@@ -27,9 +28,47 @@ export class PrismaDrinkRepository implements DrinkRepository {
     return fileUrl;
   }
 
-  async getAllDrinks(isAlcoholic: boolean) {
+  async getByNameAndAlcoholic(
+    isAlcoholic: boolean,
+    name: string,
+  ): Promise<GetAlcoholicsReturnType> {
+    return this.prisma.drink.findMany({
+      where: {
+        AND: [
+          { isAlcoholic: { equals: isAlcoholic } },
+          { name: { contains: name, mode: 'insensitive' } },
+        ],
+      },
+      orderBy: { id: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        ingredients: true,
+        imageUrl: true,
+      },
+      take: 20,
+    });
+  }
+
+  async getAlcoholicDrinks(isAlcoholic: boolean) {
     return this.prisma.drink.findMany({
       where: { isAlcoholic },
+      orderBy: { id: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        ingredients: true,
+        imageUrl: true,
+      },
+      take: 20,
+    });
+  }
+
+  async getDrinksByName(name: string) {
+    return this.prisma.drink.findMany({
+      where: { name: { contains: name, mode: 'insensitive' } },
       orderBy: { id: 'asc' },
       select: {
         id: true,
@@ -39,6 +78,22 @@ export class PrismaDrinkRepository implements DrinkRepository {
         isAlcoholic: true,
         imageUrl: true,
       },
+      take: 20,
+    });
+  }
+
+  async getAllDrinks() {
+    return this.prisma.drink.findMany({
+      orderBy: { id: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        ingredients: true,
+        isAlcoholic: true,
+        imageUrl: true,
+      },
+      take: 20,
     });
   }
 
