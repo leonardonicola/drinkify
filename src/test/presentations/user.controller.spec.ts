@@ -47,9 +47,7 @@ describe('UserController', () => {
 
       const result = await controller.getAllUsers();
 
-      delete user2.password;
-
-      expect(result).toEqual([{ id: '1', ...user2 }]);
+      expect(result).toEqual([{ id: '1', ...user2, password: undefined }]);
     });
 
     it('SUCESS: should return the user with the specified ID', async () => {
@@ -62,8 +60,6 @@ describe('UserController', () => {
       await controller.createUser(user);
 
       const result = await controller.getUserById('1');
-
-      delete user.password;
 
       expect(result).toEqual({ id: '1', ...user });
     });
@@ -79,9 +75,7 @@ describe('UserController', () => {
 
       const result = await controller.createUser(user);
 
-      delete user.password;
-
-      expect(result).toEqual({ id: '1', ...user });
+      expect(result).toEqual({ id: '1', ...user, password: undefined });
     });
   });
 
@@ -96,8 +90,6 @@ describe('UserController', () => {
       await controller.createUser(user);
 
       const result = await controller.deleteUser('1');
-
-      delete user.password;
 
       expect(result).toEqual({ id: '1', ...user });
     });
@@ -118,7 +110,7 @@ describe('UserController', () => {
 
       const result = await controller.updateUserInfos('1', updatedInfo);
 
-      expect(result).toEqual({ id: '1', ...updatedInfo });
+      expect(result).toEqual({ id: '1', ...updatedInfo, password: undefined });
     });
   });
 });
