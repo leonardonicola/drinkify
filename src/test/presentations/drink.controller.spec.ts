@@ -8,6 +8,10 @@ import { GetAllDrinksUseCase } from '../../usecases/drink/get-all.usecase';
 import { GetDrinkByIdUseCase } from '../../usecases/drink/get-by-id.usecase';
 import { UpdateDrinkUseCase } from '../../usecases/drink/update-drink.usecase';
 import { UploadDrinkPhotoUseCase } from '../../usecases/drink/upload-photo.usecase';
+import { GetDrinkByNameUseCase } from '../../usecases/drink/get-drink-by-name.usecase';
+import { GetAlcoholicDrinksUseCase } from '../../usecases/drink/get-alcoholic-drinks.usecase';
+import { GetByNameAndAlcoholicUseCase } from '../../usecases/drink/get-by-name-and-alcoholic.usecase';
+import { Drink } from '../../core/domain/entities/drink.entity';
 
 describe('DrinkController', () => {
   let controller: DrinkController;
@@ -22,6 +26,9 @@ describe('DrinkController', () => {
           useClass: InMemoryDrinkRepository,
         },
         DeleteDrinkUseCase,
+        GetDrinkByNameUseCase,
+        GetAlcoholicDrinksUseCase,
+        GetByNameAndAlcoholicUseCase,
         UpdateDrinkUseCase,
         UploadDrinkPhotoUseCase,
         GetDrinkByIdUseCase,
@@ -32,15 +39,48 @@ describe('DrinkController', () => {
     controller = module.get<DrinkController>(DrinkController);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('GET', () => {
+    let drink: Drink;
+    beforeAll(() => {
+      drink = {
+        name: 'Created Drink',
+        description: "It's a drink",
+        ingredients: ['ingredient1', 'ingredient2'],
+        instructions: ['instruction1', 'instruction2'],
+        isAlcoholic: false,
+      };
+    });
+
     it('SUCESS: should return an array of drinks', async () => {
+      await controller.createDrinkRecipe(drink);
+
       const result = await controller.getAllDrinks();
 
-      expect(result).toEqual([]);
+      expect(result).toEqual([{ ...drink, id: '1' }]);
+    });
+
+    it('SUCESS: should return a drink by id', async () => {
+      await controller.createDrinkRecipe(drink);
+
+      const result = await controller.getDrinkById('1');
+
+      expect(result).toEqual({ ...drink, id: '1' });
+    });
+
+    it('SUCESS: should return a drinks by name', async () => {
+      await controller.createDrinkRecipe(drink);
+
+      const result = await controller.getAllDrinks(undefined, 'Created Drink');
+
+      expect(result).toEqual([{ ...drink, id: '1' }]);
+    });
+
+    it('SUCESS: should return a drink by name and alcoholic', async () => {
+      await controller.createDrinkRecipe(drink);
+
+      const result = await controller.getAllDrinks(false, 'Created Drink');
+
+      expect(result).toEqual([{ ...drink, id: '1' }]);
     });
   });
 
