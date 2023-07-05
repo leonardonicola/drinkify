@@ -27,7 +27,7 @@ services:
 
   nestjs-api:
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile
     image: nestjs-api
     container_name: drinkify-api
