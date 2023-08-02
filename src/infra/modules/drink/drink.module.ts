@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { DrinkController } from 'src/presentations/drink.controller';
-import { PrismaService } from 'src/infra/prisma/repositories/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { DrinkRepository } from 'src/core/domain/repositories/drink.repository';
-import { PrismaDrinkRepository } from 'src/infra/prisma/repositories/drink.repository';
+import { PrismaDrinkRepository } from '../../repositories/drink.repository';
 import { CreateDrinkUseCase } from 'src/usecases/drink/create-drink.usecase';
 import { UpdateDrinkUseCase } from 'src/usecases/drink/update-drink.usecase';
 import { GetAllDrinksUseCase } from 'src/usecases/drink/get-all.usecase';

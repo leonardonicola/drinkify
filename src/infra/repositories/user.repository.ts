@@ -1,8 +1,8 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { UserRepository } from '../../../core/domain/repositories/user.repository';
+import { UserRepository } from 'src/core/domain/repositories/user.repository';
 import { User } from 'src/core/domain/entities/user.entity';
 
 @Injectable()

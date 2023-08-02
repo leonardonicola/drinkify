@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaCommentRepository } from '../../infra/prisma/repositories/comment.repository';
-import { PrismaService } from '../../infra/prisma/repositories/prisma.service';
+import { PrismaCommentRepository } from '../../infra/repositories/comment.repository';
+import { PrismaService } from '../../infra/prisma/prisma.service';
 import { Comment } from '../../core/domain/entities/comment.entity';
 
 export const mockComments: Comment[] = [
