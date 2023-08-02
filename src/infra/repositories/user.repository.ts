@@ -42,10 +42,9 @@ export class PrismaUserRepository implements UserRepository {
     });
   }
 
-  async getUserByUnique(userWhereUniqueInput: {
-    email?: string;
-    id?: string;
-  }): Promise<User> {
+  async getUserByUnique(
+    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+  ): Promise<User> {
     return this.prisma.user.findUnique({ where: userWhereUniqueInput });
   }
 
