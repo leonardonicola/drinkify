@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid())
-  name     String
-  email    String    @unique
-  password String
-  comments Comment[]
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  comments  Comment[]
 }
 
 model Drink {
@@ -26,6 +27,7 @@ model Drink {
   instructions String[]
   isAlcoholic  Boolean
   imageUrl     String?
+  createdAt    DateTime  @default(now())
   comments     Comment[]
 }
 
