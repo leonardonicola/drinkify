@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Drink } from 'src/core/domain/entities/drink.entity';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { DrinkRepository } from 'src/core/domain/repositories/drink.repository';
 import { FileUploadService } from 'src/infra/aws/bucket.repository';
 import { GetAlcoholicsReturnType } from 'src/@types';
@@ -20,12 +20,16 @@ export class PrismaDrinkRepository implements DrinkRepository {
   }
 
   async uploadDrinkPhoto(drinkId: string, file: Express.Multer.File) {
-    const fileUrl = await this.fileBucket.upload(file);
-    await this.prisma.drink.update({
-      where: { id: drinkId },
-      data: { imageUrl: fileUrl },
-    });
-    return fileUrl;
+    try {
+      const fileUrl = await this.fileBucket.upload(file);
+      await this.prisma.drink.update({
+        where: { id: drinkId },
+        data: { imageUrl: fileUrl },
+      });
+      return fileUrl;
+    } catch (error) {
+      Logger.log(error);
+    }
   }
 
   async getByNameAndAlcoholic(
